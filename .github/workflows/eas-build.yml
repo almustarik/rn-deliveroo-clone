@@ -1,0 +1,43 @@
+name: EAS Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  eas-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Log in to Expo
+        run: npx eas-cli login --non-interactive --username ${{ secrets.EXPO_USERNAME }} --password ${{ secrets.EXPO_PASSWORD }}
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Configure EAS
+        run: npx eas-cli configure
+
+      - name: Run EAS Build
+        run: npx eas-cli build --platform all --non-interactive
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: dist/
