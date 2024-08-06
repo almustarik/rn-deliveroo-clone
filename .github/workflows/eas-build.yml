@@ -1,15 +1,10 @@
-name: EAS Build
+name: EAS Login with Logging
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: 
+  workflow_dispatch:
 
 jobs:
-  eas-build:
+  eas-login:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,25 +14,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Log in to Expo
-        run: npx eas-cli login --non-interactive --username ${{ secrets.EXPO_USERNAME }} --password ${{ secrets.EXPO_PASSWORD }}
+          node-version: '18' # Update to Node.js 18 to match eas-cli requirements
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Configure EAS
-        run: npx eas-cli configure
+      - name: Log in to Expo and capture output
+        run: |
+          mkdir -p logs
+          eas login --username ${{ secrets.EXPO_USERNAME }} --password ${{ secrets.EXPO_PASSWORD }} 2> logs/eas-login-error.log || echo "Login failed"
 
-      - name: Run EAS Build
-        run: npx eas-cli build --platform all --non-interactive
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifact
-          path: dist/
+      - name: Display login error log
+        if: failure()
+        run: |
+          echo "EAS Login failed. See error log below:"
+          cat logs/eas-login-error.log
