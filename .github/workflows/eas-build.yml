@@ -147,25 +147,20 @@ jobs:
       #     git commit -m "chore: bump version to $NEW_VERSION and versionCode to $NEW_VERSION_CODE"
       #     git push https://PAT_TOKEN@github.com/almustarik/rn-deliveroo-clone.git
 
-      - name: 🔄 Bump version and versionCode using Node.js
+      - name: 🔄 Bump versionCode using Node.js
         run: |
           node -e "
           const fs = require('fs');
           const appJson = require('./app.json');
-          
-          // Increment the version
-          const versionParts = appJson.expo.version.split('.').map(Number);
-          versionParts[2] += 1; // Increment patch version
-          appJson.expo.version = versionParts.join('.');
 
           // Increment the versionCode
           appJson.expo.android.versionCode += 1;
 
           fs.writeFileSync('app.json', JSON.stringify(appJson, null, 2));
           "
-          
+
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           git add app.json
-          git commit -m "chore: bump version to $(cat app.json | grep '\"version\":' | awk -F '\"' '{print $4}') and versionCode to $(cat app.json | grep '\"versionCode\":' | awk '{print $2}' | tr -d ',')"
+          git commit -m "chore: bump versionCode to $(cat app.json | grep '\"versionCode\":' | awk '{print $2}' | tr -d ',')"
           git push
