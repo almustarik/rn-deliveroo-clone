@@ -124,13 +124,15 @@ jobs:
       - name: 📦 Install dependencies
         run: npm install
 
-      - name: 🚀 Build app
-        run: eas build --platform android --profile production --clear-cache --non-interactive
+      # - name: 🚀 Build app
+      #   run: eas build --platform android --profile production --clear-cache --non-interactive
 
-      - name: Install jq
-        run: sudo apt-get install jq
+      # - name: Install jq
+      #   run: sudo apt-get install jq
 
       - name: 🔄 Bump version and versionCode
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           NEW_VERSION=$(npm version patch --no-git-tag-version) # Increment the patch version
           jq --arg version "$NEW_VERSION" '.expo.version = $version' app.json > temp.json && mv temp.json app.json
@@ -143,4 +145,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add app.json
           git commit -m "chore: bump version to $NEW_VERSION and versionCode to $NEW_VERSION_CODE"
-          git push
+          git push https://PAT_TOKEN@github.com/almustarik/rn-deliveroo-clone.git
