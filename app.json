@@ -2,7 +2,7 @@
   "expo": {
     "name": "deliverooClone",
     "slug": "deliverooClone",
-    "version": "1.0.0",
+    "version": "v1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -25,7 +25,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.mustarik_al.deliverooClone",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "bundler": "metro",
