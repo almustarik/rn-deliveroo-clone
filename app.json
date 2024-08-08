@@ -25,7 +25,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.mustarik_al.deliverooClone",
-      "versionCode": 8
+      "versionCode": 56
     },
     "web": {
       "bundler": "metro",
