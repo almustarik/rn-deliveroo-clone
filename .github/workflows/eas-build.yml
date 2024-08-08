@@ -40,7 +40,7 @@ jobs:
       # Bump versionCode in build.gradle
       - name: 🔄 Bump versionCode in build.gradle
         run: |
-          sed -i -E 's/versionCode ([0-9]+)/versionCode $((\1 + 1))/' ./android/app/build.gradle
+          sed -i -E 's/versionCode ([0-9]+)/versionCode $((\1 + 1))/e' ./android/app/build.gradle
 
       # Commit and push changes
       - name: 🚀 Commit and Push versionCode updates
