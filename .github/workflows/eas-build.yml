@@ -37,10 +37,17 @@ jobs:
           fs.writeFileSync('app.json', JSON.stringify(appJson, null, 2));
           "
 
-      # Bump versionCode in build.gradle
+      # Bump versionCode in build.gradle using a Node.js script
       - name: 🔄 Bump versionCode in build.gradle
         run: |
-          sed -i -E 's/versionCode ([0-9]+)/versionCode $((\1 + 1))/e' ./android/app/build.gradle
+          node -e "
+          const fs = require('fs');
+          const path = './android/app/build.gradle';
+          const gradleFile = fs.readFileSync(path, 'utf8');
+          const versionCodeRegex = /versionCode ([0-9]+)/;
+          const updatedGradleFile = gradleFile.replace(versionCodeRegex, (match, p1) => `versionCode ${parseInt(p1, 10) + 1}`);
+          fs.writeFileSync(path, updatedGradleFile);
+          "
 
       # Commit and push changes
       - name: 🚀 Commit and Push versionCode updates
