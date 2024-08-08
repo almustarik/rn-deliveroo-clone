@@ -55,3 +55,4 @@ jobs:
           git add app.json android/app/build.gradle
           git commit -m "chore: bump versionCode in app.json and build.gradle"
           git push https://PAT_TOKEN@github.com/almustarik/rn-deliveroo-clone.git
+
