@@ -44,8 +44,10 @@ jobs:
           const fs = require('fs');
           const path = './android/app/build.gradle';
           const gradleFile = fs.readFileSync(path, 'utf8');
-          const versionCodeRegex = /versionCode ([0-9]+)/;
-          const updatedGradleFile = gradleFile.replace(versionCodeRegex, (match, p1) => `versionCode ${parseInt(p1, 10) + 1}`);
+          const versionCodeRegex = /versionCode (\d+)/;
+          const updatedGradleFile = gradleFile.replace(versionCodeRegex, (match, p1) => {
+            return `versionCode ${parseInt(p1, 10) + 1}`;
+          });
           fs.writeFileSync(path, updatedGradleFile);
           "
 
