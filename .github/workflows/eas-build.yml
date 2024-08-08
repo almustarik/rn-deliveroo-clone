@@ -45,10 +45,17 @@ jobs:
           const path = './android/app/build.gradle';
           const gradleFile = fs.readFileSync(path, 'utf8');
           const versionCodeRegex = /versionCode (\d+)/;
-          const updatedGradleFile = gradleFile.replace(versionCodeRegex, (match, p1) => {
-            return `versionCode ${parseInt(p1, 10) + 1}`;
-          });
-          fs.writeFileSync(path, updatedGradleFile);
+
+          if (versionCodeRegex.test(gradleFile)) {
+            const updatedGradleFile = gradleFile.replace(versionCodeRegex, (match, p1) => {
+              const newVersionCode = parseInt(p1, 10) + 1;
+              return \`versionCode \${newVersionCode}\`;
+            });
+            fs.writeFileSync(path, updatedGradleFile);
+          } else {
+            console.error('versionCode not found in build.gradle');
+            process.exit(1);
+          }
           "
 
       # Commit and push changes
