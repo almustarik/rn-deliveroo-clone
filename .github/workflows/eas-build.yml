@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,8 +25,13 @@ jobs:
       - name: 📦 Install dependencies
         run: npm install
 
-      # Bump versionCode in app.json
+      - name: 🚀 Build app
+        id: build
+        run: eas build --platform android --profile production --clear-cache --non-interactive
+        continue-on-error: false
+
       - name: 🔄 Bump versionCode in app.json
+        id: bump-app-json
         run: |
           node -e "
           const fs = require('fs');
@@ -36,9 +42,11 @@ jobs:
 
           fs.writeFileSync('app.json', JSON.stringify(appJson, null, 2));
           "
+        continue-on-error: false
+        if: steps.build.outcome == 'success'
 
-      # Bump versionCode in build.gradle using a Node.js script
       - name: 🔄 Bump versionCode in build.gradle
+        id: bump-gradle
         run: |
           node -e "
           const fs = require('fs');
@@ -57,9 +65,11 @@ jobs:
             process.exit(1);
           }
           "
+        continue-on-error: false
+        if: steps.bump-app-json.outcome == 'success'
 
-      # Commit and push changes
       - name: 🚀 Commit and Push versionCode updates
+        if: steps.bump-gradle.outcome == 'success'
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
