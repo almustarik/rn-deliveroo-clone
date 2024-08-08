@@ -24,9 +24,6 @@ jobs:
       - name: 📦 Install dependencies
         run: npm install
 
-      # - name: 🚀 Build app
-      #   run: eas build --platform android --profile production --clear-cache --non-interactive
-
       # Bump versionCode in app.json
       - name: 🔄 Bump versionCode in app.json
         run: |
@@ -43,7 +40,7 @@ jobs:
       # Bump versionCode in build.gradle
       - name: 🔄 Bump versionCode in build.gradle
         run: |
-          sed -i -E 's/versionCode ([0-9]+)/echo \"versionCode $((\1 + 1))\"/e' ./android/app/build.gradle
+          sed -i -E 's/versionCode ([0-9]+)/versionCode $((\1 + 1))/' ./android/app/build.gradle
 
       # Commit and push changes
       - name: 🚀 Commit and Push versionCode updates
@@ -54,5 +51,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add app.json android/app/build.gradle
           git commit -m "chore: bump versionCode in app.json and build.gradle"
-          git push https://PAT_TOKEN@github.com/almustarik/rn-deliveroo-clone.git
-
+          git push https://PAT_TOKEN@github.com/almustarik/rn-deliveroo-clone.git main
